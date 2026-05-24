@@ -7,3 +7,6 @@ xcuserdata/
 *.swp
 .swiftpm/
 Package.resolved
+.superpowers/
+site/node_modules/
+site/tsconfig.tsbuildinfo

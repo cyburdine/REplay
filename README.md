@@ -1,4 +1,4 @@
-# Re:play
+# RE:play
 
 A lightweight, native macOS media player — built with SwiftUI, AVFoundation, and zero third-party dependencies.
 
@@ -10,24 +10,24 @@ A lightweight, native macOS media player — built with SwiftUI, AVFoundation, a
 ## Build
 
 ```bash
-open Replay.xcodeproj
+open REplay.xcodeproj
 ```
 
-Then select the **Replay** scheme and press ⌘R, or build from the command line:
+Then select the **REplay** scheme and press ⌘R, or build from the command line:
 
 ```bash
-xcodebuild -project Replay.xcodeproj -scheme Replay -configuration Release \
+xcodebuild -project REplay.xcodeproj -scheme REplay -configuration Release \
            -derivedDataPath build build
 ```
 
-The product lands at `build/Build/Products/Release/Replay.app`.
+The product lands at `build/Build/Products/Release/REplay.app`.
 
 ## Install
 
-Drag the built `Replay.app` to `/Applications` (it will appear in Finder as **Re:play**):
+Drag the built `REplay.app` to `/Applications` (it will appear in Finder as **RE:play**):
 
 ```bash
-cp -R build/Build/Products/Release/Replay.app /Applications/
+cp -R build/Build/Products/Release/REplay.app /Applications/
 ```
 
 ## Supported Formats
@@ -56,8 +56,8 @@ Native AVFoundation codec support:
 ## Architecture
 
 ```
-Replay/
-├── App/            ReplayApp.swift, AppDelegate.swift
+REplay/
+├── App/            REplayApp.swift, AppDelegate.swift
 ├── Views/          ContentView, PlayerView, ControlsView, PlaylistView, SplashView
 ├── ViewModels/     PlayerViewModel  (single observable orchestrator)
 ├── Models/         MediaItem, PlaylistState
@@ -67,10 +67,10 @@ Replay/
 └── Resources/      Assets.xcassets, Info.plist
 ```
 
-`PlayerViewModel` owns one `MediaPlayerService` and one `PlaylistManager` and is the only observable the views consume directly. State is persisted to `UserDefaults` (lightweight values) and `~/Library/Application Support/Replay/playlist.json` (playlist), with security-scoped bookmarks so paths resolve after restart.
+`PlayerViewModel` owns one `MediaPlayerService` and one `PlaylistManager` and is the only observable the views consume directly. State is persisted to `UserDefaults` (lightweight values) and `~/Library/Application Support/REplay/playlist.json` (playlist), with security-scoped bookmarks so paths resolve after restart.
 
 ## Notes
 
-- The colon in **Re:play** is part of the user-facing name (`CFBundleDisplayName`); on disk the bundle and target are named `Replay`.
+- The colon in **RE:play** is part of the user-facing name (`CFBundleDisplayName`); on disk the bundle and target are named `REplay`.
 - Bundle is signed ad-hoc (`Sign to Run Locally`); switch to a Developer ID signing identity in Xcode for distribution outside `/Applications` on Apple Silicon.
-- The placeholder app icon is generated procedurally — replace `Replay/Resources/Assets.xcassets/AppIcon.appiconset/icon_*.png` with a designed asset before shipping.
+- The placeholder app icon is generated procedurally — replace `REplay/Resources/Assets.xcassets/AppIcon.appiconset/icon_*.png` with a designed asset before shipping.

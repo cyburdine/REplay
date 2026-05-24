@@ -1,0 +1,436 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 56;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		BB00000000000000000000A1 /* REplayApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA00000000000000000000A1 /* REplayApp.swift */; };
+		BB00000000000000000000A2 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA00000000000000000000A2 /* AppDelegate.swift */; };
+		BB00000000000000000000A3 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA00000000000000000000A3 /* ContentView.swift */; };
+		BB00000000000000000000A4 /* PlayerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA00000000000000000000A4 /* PlayerView.swift */; };
+		BB00000000000000000000A5 /* ControlsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA00000000000000000000A5 /* ControlsView.swift */; };
+		BB00000000000000000000A6 /* PlaylistView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA00000000000000000000A6 /* PlaylistView.swift */; };
+		BB00000000000000000000A7 /* SplashView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA00000000000000000000A7 /* SplashView.swift */; };
+		BB00000000000000000000A8 /* PlayerViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA00000000000000000000A8 /* PlayerViewModel.swift */; };
+		BB00000000000000000000A9 /* MediaItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA00000000000000000000A9 /* MediaItem.swift */; };
+		BB00000000000000000000AA /* PlaylistState.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA00000000000000000000AA /* PlaylistState.swift */; };
+		BB00000000000000000000AB /* MediaPlayerService.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA00000000000000000000AB /* MediaPlayerService.swift */; };
+		BB00000000000000000000AC /* PlaylistManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA00000000000000000000AC /* PlaylistManager.swift */; };
+		BB00000000000000000000AD /* PersistenceService.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA00000000000000000000AD /* PersistenceService.swift */; };
+		BB00000000000000000000AE /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FA00000000000000000000AE /* Assets.xcassets */; };
+		BB00000000000000000000B1 /* AudioVisualizerTap.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA00000000000000000000B1 /* AudioVisualizerTap.swift */; };
+		BB00000000000000000000B2 /* VisualizerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA00000000000000000000B2 /* VisualizerView.swift */; };
+		BB00000000000000000000B3 /* AboutView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA00000000000000000000B3 /* AboutView.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		FA00000000000000000000A1 /* REplayApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = REplayApp.swift; sourceTree = "<group>"; };
+		FA00000000000000000000A2 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		FA00000000000000000000A3 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		FA00000000000000000000A4 /* PlayerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerView.swift; sourceTree = "<group>"; };
+		FA00000000000000000000A5 /* ControlsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ControlsView.swift; sourceTree = "<group>"; };
+		FA00000000000000000000A6 /* PlaylistView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaylistView.swift; sourceTree = "<group>"; };
+		FA00000000000000000000A7 /* SplashView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplashView.swift; sourceTree = "<group>"; };
+		FA00000000000000000000A8 /* PlayerViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerViewModel.swift; sourceTree = "<group>"; };
+		FA00000000000000000000A9 /* MediaItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaItem.swift; sourceTree = "<group>"; };
+		FA00000000000000000000AA /* PlaylistState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaylistState.swift; sourceTree = "<group>"; };
+		FA00000000000000000000AB /* MediaPlayerService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaPlayerService.swift; sourceTree = "<group>"; };
+		FA00000000000000000000AC /* PlaylistManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaylistManager.swift; sourceTree = "<group>"; };
+		FA00000000000000000000AD /* PersistenceService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersistenceService.swift; sourceTree = "<group>"; };
+		FA00000000000000000000AE /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		FA00000000000000000000AF /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		FA00000000000000000000B0 /* REplay.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = REplay.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		FA00000000000000000000B1 /* AudioVisualizerTap.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioVisualizerTap.swift; sourceTree = "<group>"; };
+		FA00000000000000000000B2 /* VisualizerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VisualizerView.swift; sourceTree = "<group>"; };
+		FA00000000000000000000B3 /* AboutView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutView.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXGroup section */
+		CC00000000000000000000A1 = {
+			isa = PBXGroup;
+			children = (
+				CC00000000000000000000A2 /* REplay */,
+				CC00000000000000000000A9 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		CC00000000000000000000A2 /* REplay */ = {
+			isa = PBXGroup;
+			children = (
+				CC00000000000000000000A3 /* App */,
+				CC00000000000000000000A4 /* Views */,
+				CC00000000000000000000A5 /* ViewModels */,
+				CC00000000000000000000A6 /* Models */,
+				CC00000000000000000000A7 /* Services */,
+				CC00000000000000000000A8 /* Resources */,
+			);
+			path = REplay;
+			sourceTree = "<group>";
+		};
+		CC00000000000000000000A3 /* App */ = {
+			isa = PBXGroup;
+			children = (
+				FA00000000000000000000A1 /* REplayApp.swift */,
+				FA00000000000000000000A2 /* AppDelegate.swift */,
+			);
+			path = App;
+			sourceTree = "<group>";
+		};
+		CC00000000000000000000A4 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				FA00000000000000000000A3 /* ContentView.swift */,
+				FA00000000000000000000A4 /* PlayerView.swift */,
+				FA00000000000000000000A5 /* ControlsView.swift */,
+				FA00000000000000000000A6 /* PlaylistView.swift */,
+				FA00000000000000000000A7 /* SplashView.swift */,
+				FA00000000000000000000B2 /* VisualizerView.swift */,
+				FA00000000000000000000B3 /* AboutView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		CC00000000000000000000A5 /* ViewModels */ = {
+			isa = PBXGroup;
+			children = (
+				FA00000000000000000000A8 /* PlayerViewModel.swift */,
+			);
+			path = ViewModels;
+			sourceTree = "<group>";
+		};
+		CC00000000000000000000A6 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				FA00000000000000000000A9 /* MediaItem.swift */,
+				FA00000000000000000000AA /* PlaylistState.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		CC00000000000000000000A7 /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				FA00000000000000000000AB /* MediaPlayerService.swift */,
+				FA00000000000000000000AC /* PlaylistManager.swift */,
+				FA00000000000000000000AD /* PersistenceService.swift */,
+				FA00000000000000000000B1 /* AudioVisualizerTap.swift */,
+			);
+			path = Services;
+			sourceTree = "<group>";
+		};
+		CC00000000000000000000A8 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				FA00000000000000000000AE /* Assets.xcassets */,
+				FA00000000000000000000AF /* Info.plist */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		CC00000000000000000000A9 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				FA00000000000000000000B0 /* REplay.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		DD00000000000000000000A1 /* REplay */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = DD00000000000000000000A5 /* Build configuration list for PBXNativeTarget "REplay" */;
+			buildPhases = (
+				DD00000000000000000000A2 /* Sources */,
+				DD00000000000000000000A3 /* Frameworks */,
+				DD00000000000000000000A4 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = REplay;
+			productName = REplay;
+			productReference = FA00000000000000000000B0 /* REplay.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		EE00000000000000000000A1 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = YES;
+				LastSwiftUpdateCheck = 1500;
+				LastUpgradeCheck = 1500;
+				TargetAttributes = {
+					DD00000000000000000000A1 = {
+						CreatedOnToolsVersion = 15.0;
+					};
+				};
+			};
+			buildConfigurationList = EE00000000000000000000A2 /* Build configuration list for PBXProject "REplay" */;
+			compatibilityVersion = "Xcode 14.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = CC00000000000000000000A1;
+			productRefGroup = CC00000000000000000000A9 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				DD00000000000000000000A1 /* REplay */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		DD00000000000000000000A4 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				BB00000000000000000000AE /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		DD00000000000000000000A2 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				BB00000000000000000000A1 /* REplayApp.swift in Sources */,
+				BB00000000000000000000A2 /* AppDelegate.swift in Sources */,
+				BB00000000000000000000A3 /* ContentView.swift in Sources */,
+				BB00000000000000000000A4 /* PlayerView.swift in Sources */,
+				BB00000000000000000000A5 /* ControlsView.swift in Sources */,
+				BB00000000000000000000A6 /* PlaylistView.swift in Sources */,
+				BB00000000000000000000A7 /* SplashView.swift in Sources */,
+				BB00000000000000000000A8 /* PlayerViewModel.swift in Sources */,
+				BB00000000000000000000A9 /* MediaItem.swift in Sources */,
+				BB00000000000000000000AA /* PlaylistState.swift in Sources */,
+				BB00000000000000000000AB /* MediaPlayerService.swift in Sources */,
+				BB00000000000000000000AC /* PlaylistManager.swift in Sources */,
+				BB00000000000000000000AD /* PersistenceService.swift in Sources */,
+				BB00000000000000000000B1 /* AudioVisualizerTap.swift in Sources */,
+				BB00000000000000000000B2 /* VisualizerView.swift in Sources */,
+				BB00000000000000000000B3 /* AboutView.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		DD00000000000000000000A3 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		EE00000000000000000000A3 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MACOSX_DEPLOYMENT_TARGET = 13.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		EE00000000000000000000A4 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MACOSX_DEPLOYMENT_TARGET = 13.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = macosx;
+				SWIFT_COMPILATION_MODE = wholemodule;
+			};
+			name = Release;
+		};
+		DD00000000000000000000A6 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_IDENTITY = "-";
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEAD_CODE_STRIPPING = YES;
+				ENABLE_HARDENED_RUNTIME = YES;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = REplay/Resources/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 13.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.cyburdine.replay;
+				PRODUCT_NAME = REplay;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		DD00000000000000000000A7 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_IDENTITY = "-";
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEAD_CODE_STRIPPING = YES;
+				ENABLE_HARDENED_RUNTIME = YES;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = REplay/Resources/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 13.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.cyburdine.replay;
+				PRODUCT_NAME = REplay;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		EE00000000000000000000A2 /* Build configuration list for PBXProject "REplay" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				EE00000000000000000000A3 /* Debug */,
+				EE00000000000000000000A4 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		DD00000000000000000000A5 /* Build configuration list for PBXNativeTarget "REplay" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				DD00000000000000000000A6 /* Debug */,
+				DD00000000000000000000A7 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = EE00000000000000000000A1 /* Project object */;
+}
