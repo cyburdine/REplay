@@ -2,9 +2,13 @@ export const Footer: React.FC = () => {
   return (
     <footer className="relative px-6 md:px-12 py-10 border-t border-white/8">
       <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-start md:items-center justify-between gap-5">
-        <div className="flex items-center gap-2.5 text-[13px] text-white/55">
-          <span className="inline-block w-2 h-2 rounded-full bg-gradient-to-br from-white to-aurora-blue" />
-          <span className="font-display font-semibold text-white/85">RE:play</span>
+        <div className="flex items-center gap-3 text-[13px] text-white/55">
+          <img
+            src="/logo-wordmark.png"
+            alt="RE:play"
+            className="h-6 w-auto select-none opacity-90"
+            draggable={false}
+          />
           <span className="text-white/30">v1.0</span>
         </div>
         <div className="flex flex-wrap items-center gap-x-6 gap-y-2 text-[12px] text-white/50">

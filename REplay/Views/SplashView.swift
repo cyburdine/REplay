@@ -6,25 +6,15 @@ struct SplashView: View {
     var body: some View {
         ZStack {
             Rectangle()
-                .fill(.regularMaterial)
+                .fill(.black)
                 .ignoresSafeArea()
 
-            VStack(spacing: 18) {
-                Image(systemName: "play.fill")
-                    .font(.system(size: 56, weight: .medium))
-                    .padding(28)
-                    .background(
-                        RoundedRectangle(cornerRadius: 26, style: .continuous)
-                            .fill(.tint.opacity(0.18))
-                    )
-                    .foregroundStyle(.tint)
-
-                Text("RE:play")
-                    .font(.system(size: 38, weight: .semibold, design: .default))
-                    .kerning(-0.5)
-                    .foregroundStyle(.primary)
-            }
-            .opacity(opacity)
+            Image("Wordmark")
+                .resizable()
+                .interpolation(.high)
+                .aspectRatio(contentMode: .fit)
+                .frame(width: 360)
+                .opacity(opacity)
         }
         .onAppear {
             withAnimation(.easeOut(duration: 0.45)) { opacity = 1 }

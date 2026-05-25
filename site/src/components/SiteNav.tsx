@@ -35,9 +35,13 @@ export const SiteNav: React.FC<{ transparent?: boolean }> = ({ transparent }) =>
           (transparent ? "" : "border-b border-white/5 bg-ink/40 backdrop-blur-xl")
         }
       >
-        <Link to="/" className="flex items-center gap-2.5 group">
-          <span className="inline-block w-2.5 h-2.5 rounded-full bg-gradient-to-br from-white to-aurora-blue shadow-[0_0_10px_rgba(160,216,255,0.6)] group-hover:shadow-[0_0_14px_rgba(160,216,255,0.9)] transition-shadow" />
-          <span className="font-display text-[15px] font-semibold tracking-tight">RE:play</span>
+        <Link to="/" className="flex items-center group" aria-label="RE:play — home">
+          <img
+            src="/logo-wordmark.png"
+            alt="RE:play"
+            className="h-7 md:h-8 w-auto select-none transition-opacity group-hover:opacity-90"
+            draggable={false}
+          />
         </Link>
 
         <nav className="hidden lg:flex items-center gap-7 text-[13px] text-white/65">

@@ -15,7 +15,6 @@ struct REplayApp: App {
                 .onAppear { appDelegate.viewModel = viewModel }
         }
         .windowStyle(.titleBar)
-        .windowToolbarStyle(.unified(showsTitle: true))
         .commands { menuCommands }
     }
 
