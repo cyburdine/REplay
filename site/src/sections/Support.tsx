@@ -1,4 +1,4 @@
-export const PATREON_URL = "https://www.patreon.com/your-handle";
+export const PATREON_URL = "https://buymeacoffee.com/cyburdine";
 
 export const Support: React.FC = () => {
   return (
@@ -54,11 +54,11 @@ export const Support: React.FC = () => {
                   }}
                 >
                   <PatreonGlyph />
-                  Support on Patreon
+                  Buy me a coffee
                   <span aria-hidden>→</span>
                 </a>
                 <a
-                  href="https://github.com/your/replay"
+                  href="https://github.com/cyburdine/REplay"
                   target="_blank"
                   rel="noreferrer"
                   className="inline-flex items-center gap-2 px-5 py-3 rounded-xl glass text-[14px] text-white/90 hover:bg-white/10 transition-colors"

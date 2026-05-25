@@ -9,8 +9,8 @@ export const Footer: React.FC = () => {
         </div>
         <div className="flex flex-wrap items-center gap-x-6 gap-y-2 text-[12px] text-white/50">
           <span>Built with SwiftUI + AVFoundation</span>
-          <a className="hover:text-white/80 transition-colors" href="https://github.com/your/replay" target="_blank" rel="noreferrer">GitHub ↗</a>
-          <a className="hover:text-white/80 transition-colors" href="https://www.patreon.com/your-handle" target="_blank" rel="noreferrer">Patreon ↗</a>
+          <a className="hover:text-white/80 transition-colors" href="https://github.com/cyburdine/REplay" target="_blank" rel="noreferrer">GitHub ↗</a>
+          <a className="hover:text-white/80 transition-colors" href="https://github.com/sponsors/cyburdine" target="_blank" rel="noreferrer">Sponsor ↗</a>
           <span className="text-white/30">© {new Date().getFullYear()}</span>
         </div>
       </div>

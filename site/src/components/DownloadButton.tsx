@@ -1,5 +1,5 @@
 export const DOWNLOAD_URL =
-  "https://github.com/your/replay/releases/latest/download/REplay.dmg";
+  "https://github.com/cyburdine/REplay/releases/latest/download/REplay.dmg";
 
 export const DownloadButton: React.FC<{ large?: boolean; label?: string }> = ({
   large,
