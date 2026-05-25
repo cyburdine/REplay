@@ -20,8 +20,11 @@ const API_ENDPOINT =
   (import.meta.env.VITE_FEEDBACK_API as string | undefined) ??
   "/api/feedback";
 
+// Public-by-design — Turnstile site keys live in the browser bundle. The secret
+// key (in the Worker) is what actually verifies tokens.
 const TURNSTILE_SITE_KEY =
-  (import.meta.env.VITE_TURNSTILE_SITE_KEY as string | undefined) ?? "";
+  (import.meta.env.VITE_TURNSTILE_SITE_KEY as string | undefined) ??
+  "0x4AAAAAADWIZf-x9v-AzNZ5";
 
 const INITIAL: FormState = {
   kind: "feature",
