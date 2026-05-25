@@ -1,0 +1,26 @@
+{
+  "display_information": {
+    "name": "REplay Feedback",
+    "description": "Posts bug reports and feature requests submitted via replay.cyburdine.com to Slack.",
+    "background_color": "#02030a",
+    "long_description": "Receives webhook calls from the REplay feedback Cloudflare Worker whenever someone submits a bug report or feature request through the marketing site. Each Slack notification links to the auto-created GitHub issue on cyburdine/REplay and includes the submitter's screenshot when present. No interactivity, no slash commands, outbound webhooks only."
+  },
+  "features": {
+    "bot_user": {
+      "display_name": "REplay Feedback",
+      "always_online": false
+    }
+  },
+  "oauth_config": {
+    "scopes": {
+      "bot": [
+        "incoming-webhook"
+      ]
+    }
+  },
+  "settings": {
+    "org_deploy_enabled": false,
+    "socket_mode_enabled": false,
+    "token_rotation_enabled": false
+  }
+}
