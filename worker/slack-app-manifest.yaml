@@ -1,0 +1,41 @@
+# Slack app manifest for the RE:play feedback notifier.
+#
+# How to use:
+#   1. Go to https://api.slack.com/apps
+#   2. Click "Create New App" → "From a manifest"
+#   3. Pick your workspace, then paste this entire file into the YAML tab
+#   4. Click Next → Create
+#   5. In the new app's left sidebar: Features → Incoming Webhooks
+#   6. Click "Add New Webhook to Workspace", choose the channel that should
+#      receive feedback notifications, and copy the resulting webhook URL.
+#   7. Hand that URL to `wrangler secret put SLACK_WEBHOOK_URL` (see issue #8).
+#
+# After upload you do NOT need to add any bot scopes beyond what's listed
+# below — the `incoming-webhook` scope is the only thing the Worker uses.
+
+display_information:
+  name: RE:play Feedback
+  description: Posts bug reports and feature requests submitted via replay.cyburdine.com to Slack.
+  background_color: "#02030a"
+  long_description: >-
+    Receives webhook calls from the RE:play feedback Cloudflare Worker
+    whenever someone submits a bug report or feature request at
+    https://replay.cyburdine.com/feature-request. Each notification links
+    to the auto-created GitHub issue on cyburdine/REplay and includes the
+    submitter's screenshot when present. No interactivity, no slash
+    commands — outbound webhooks only.
+
+features:
+  bot_user:
+    display_name: RE:play Feedback
+    always_online: false
+
+oauth_config:
+  scopes:
+    bot:
+      - incoming-webhook
+
+settings:
+  org_deploy_enabled: false
+  socket_mode_enabled: false
+  token_rotation_enabled: false
