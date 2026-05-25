@@ -11,8 +11,9 @@ struct AboutView: View {
         return "Build \(v) (\(b))"
     }
 
-    private let homeURL = URL(string: "https://github.com/cyburdine/REplay")!
-    private let issuesURL = URL(string: "https://github.com/cyburdine/REplay/issues")!
+    private let homeURL = URL(string: "https://replay.cyburdine.com")!
+    private let issuesURL = URL(string: "https://replay.cyburdine.com/feature-request")!
+    private let creditsURL = URL(string: "https://github.com/cyburdine/REplay/graphs/contributors")!
 
     var body: some View {
         VStack(spacing: 0) {
@@ -45,7 +46,7 @@ struct AboutView: View {
                     Text("·").foregroundStyle(.tertiary)
                     linkButton("Report a Bug", url: issuesURL)
                     Text("·").foregroundStyle(.tertiary)
-                    linkButton("Credits", url: homeURL.appendingPathComponent("graphs/contributors"))
+                    linkButton("Credits", url: creditsURL)
                 }
                 .font(.system(size: 11))
             }
