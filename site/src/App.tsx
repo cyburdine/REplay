@@ -12,6 +12,7 @@ import { FAQ } from "./pages/FAQ";
 import { Docs } from "./pages/Docs";
 import { Donate } from "./pages/Donate";
 import { FeatureRequest } from "./pages/FeatureRequest";
+import { SiteNav } from "./components/SiteNav";
 
 const Landing: React.FC = () => (
   <main className="relative">
@@ -47,6 +48,7 @@ export default function App() {
   return (
     <>
       <ScrollManager />
+      <SiteNav />
       <Routes>
         <Route path="/" element={<Landing />} />
         <Route path="/faq" element={<FAQ />} />

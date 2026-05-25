@@ -92,14 +92,15 @@ export const LivePlayer: React.FC = () => {
       <div className="relative max-w-6xl mx-auto">
         <div className="text-center mb-12">
           <div className="text-[11px] uppercase tracking-[2px] text-aurora-mint mb-3">
-            Live demo
+            Seeing is believing
           </div>
           <h2 className="font-display text-3xl md:text-5xl font-semibold tracking-tight">
-            This is the actual UI. <span className="text-white/55">Press play.</span>
+            Below is an interactive demo of what the{" "}
+            <span className="text-white/55">app looks and feels like.</span>
           </h2>
           <p className="mt-4 text-white/60 max-w-xl mx-auto text-[15px]">
-            Not a screenshot. A simulated instance of RE:play running in your
-            browser via Remotion. Click anything.
+            Nothing fancy… just a small reliable media player that just
+            works. Tinker around or just download it — it's only 4MB!
           </p>
         </div>
 
@@ -147,7 +148,7 @@ export const LivePlayer: React.FC = () => {
                     background:
                       "linear-gradient(180deg, rgba(255,255,255,0.9), rgba(220,230,255,0.85))",
                     boxShadow:
-                      "0 20px 60px rgba(120,170,255,0.5), inset 0 1px 0 rgba(255,255,255,0.9)",
+                      "0 20px 60px rgba(160,90,255,0.55), inset 0 1px 0 rgba(255,255,255,0.9)",
                   }}
                 >
                   <span className="text-2xl text-ink ml-1">▶</span>

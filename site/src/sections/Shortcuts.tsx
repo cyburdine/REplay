@@ -21,7 +21,8 @@ export const Shortcuts: React.FC = () => {
             Keyboard-first
           </div>
           <h2 className="font-display text-3xl md:text-5xl font-semibold tracking-tight">
-            Eleven shortcuts. <span className="text-white/55">The whole app.</span>
+            Keyboard shortcuts{" "}
+            <span className="text-white/55">to make things easy.</span>
           </h2>
         </div>
 

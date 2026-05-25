@@ -8,7 +8,7 @@ export const Support: React.FC = () => {
           className="relative rounded-3xl p-10 md:p-14 overflow-hidden"
           style={{
             background:
-              "linear-gradient(135deg, rgba(255,120,200,0.10), rgba(80,255,200,0.06) 60%, rgba(80,100,255,0.10))",
+              "linear-gradient(135deg, rgba(255,120,200,0.10), rgba(255,93,200,0.06) 60%, rgba(80,100,255,0.10))",
             border: "1px solid rgba(255,255,255,0.10)",
             boxShadow:
               "0 30px 80px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.12)",
@@ -68,9 +68,9 @@ export const Support: React.FC = () => {
               </div>
             </div>
 
-            {/* Supporters cluster */}
+            {/* Supporter pulse — animated equalizer with a glowing heart */}
             <div className="relative h-44 md:h-52 hidden md:block">
-              <SupporterDots />
+              <SupporterPulse />
             </div>
           </div>
         </div>
@@ -79,38 +79,98 @@ export const Support: React.FC = () => {
   );
 };
 
-const SupporterDots: React.FC = () => {
-  // 22 placeholder avatars
-  const dots = Array.from({ length: 22 }, (_, i) => {
-    const hue = (i * 53) % 360;
-    const cx = 10 + ((i * 37) % 80);
-    const cy = 10 + ((i * 73) % 80);
-    const size = 18 + (i % 4) * 4;
-    return { hue, cx, cy, size, i };
+const SupporterPulse: React.FC = () => {
+  // A symmetric equalizer fanning out from a glowing heart — speaks "audio"
+  // and "support" together. Deterministic heights keep the bars feeling
+  // composed rather than random.
+  const BAR_COUNT = 17;
+  const heights = Array.from({ length: BAR_COUNT }, (_, i) => {
+    const center = (BAR_COUNT - 1) / 2;
+    const dist = Math.abs(i - center) / center; // 0 at center → 1 at edges
+    // Falls off toward the edges so the heart sits in the tallest part.
+    const base = 1 - Math.pow(dist, 1.5) * 0.75;
+    // A second harmonic adds a little visual rhythm so it doesn't read as a
+    // perfect arch.
+    const wobble = 0.12 * Math.sin(i * 1.7);
+    return Math.max(0.18, base + wobble);
   });
+
   return (
-    <div className="absolute inset-0">
-      {dots.map((d) => (
-        <div
-          key={d.i}
-          className="absolute rounded-full"
-          style={{
-            left: `${d.cx}%`,
-            top: `${d.cy}%`,
-            width: d.size,
-            height: d.size,
-            background: `radial-gradient(circle at 35% 30%, hsl(${d.hue}, 80%, 80%), hsl(${d.hue}, 70%, 50%))`,
-            border: "1.5px solid rgba(255,255,255,0.6)",
-            boxShadow: "0 4px 16px rgba(0,0,0,0.3)",
-            transform: "translate(-50%, -50%)",
-          }}
-        />
-      ))}
+    <div className="absolute inset-0 flex items-center justify-center">
+      {/* Soft pink halo behind the whole thing */}
       <div
-        className="absolute right-2 bottom-2 text-[11px] text-white/50 font-mono"
+        className="absolute w-56 h-56 rounded-full"
+        style={{
+          background:
+            "radial-gradient(circle, rgba(255,120,200,0.28), transparent 65%)",
+          filter: "blur(14px)",
+        }}
+      />
+
+      {/* Equalizer bars */}
+      <div
+        className="relative flex items-end gap-[6px] h-32"
+        aria-hidden
       >
-        + 240 supporters
+        {heights.map((h, i) => (
+          <span
+            key={i}
+            className="block w-[6px] rounded-full"
+            style={{
+              height: `${Math.round(h * 100)}%`,
+              background:
+                "linear-gradient(180deg, #ffd1ec 0%, #ff7ad0 45%, #b56cff 100%)",
+              boxShadow: "0 0 12px rgba(255,120,200,0.45)",
+              animation: `eqPulse ${1.6 + (i % 5) * 0.18}s ease-in-out ${
+                i * 0.08
+              }s infinite`,
+              transformOrigin: "bottom center",
+            }}
+          />
+        ))}
       </div>
+
+      {/* Heart glyph floating over the tallest bars */}
+      <div
+        className="absolute"
+        style={{
+          transform: "translateY(-18px)",
+          animation: "heartBeat 1.8s ease-in-out infinite",
+        }}
+      >
+        <svg width="44" height="44" viewBox="0 0 24 24" aria-hidden>
+          <defs>
+            <linearGradient id="heartGrad" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0%" stopColor="#ffffff" />
+              <stop offset="60%" stopColor="#ffb6dd" />
+              <stop offset="100%" stopColor="#ff5dc8" />
+            </linearGradient>
+          </defs>
+          <path
+            d="M12 21s-7-4.35-9.5-9.06C.9 8.69 2.7 5 6.2 5c1.99 0 3.42 1.07 4.3 2.36h.99C12.38 6.07 13.81 5 15.8 5c3.5 0 5.3 3.69 3.7 6.94C19 16.65 12 21 12 21z"
+            fill="url(#heartGrad)"
+            stroke="rgba(255,255,255,0.7)"
+            strokeWidth="0.5"
+            style={{ filter: "drop-shadow(0 6px 18px rgba(255,93,200,0.55))" }}
+          />
+        </svg>
+      </div>
+
+      <style>{`
+        @keyframes eqPulse {
+          0%, 100% { transform: scaleY(0.55); opacity: 0.85; }
+          50%      { transform: scaleY(1);    opacity: 1; }
+        }
+        @keyframes heartBeat {
+          0%, 100% { transform: translateY(-18px) scale(1); }
+          15%      { transform: translateY(-18px) scale(1.12); }
+          30%      { transform: translateY(-18px) scale(1); }
+          45%      { transform: translateY(-18px) scale(1.08); }
+        }
+        @media (prefers-reduced-motion: reduce) {
+          .relative span, .absolute > svg { animation: none !important; }
+        }
+      `}</style>
     </div>
   );
 };

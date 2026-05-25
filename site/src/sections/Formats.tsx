@@ -20,9 +20,9 @@ export const Formats: React.FC = () => {
       <div className="relative max-w-6xl mx-auto">
         <div className="text-center mb-10">
           <h3 className="font-display text-2xl md:text-3xl font-semibold tracking-tight">
-            If AVFoundation speaks it,{" "}
+            If you have a codec,{" "}
             <span className="bg-clip-text text-transparent bg-gradient-to-r from-white to-aurora-mint">
-              RE:play plays it.
+              RE:play can play it!
             </span>
           </h3>
         </div>
@@ -49,7 +49,7 @@ export const Formats: React.FC = () => {
                         : "#ff9ae0",
                     boxShadow: `0 0 8px ${
                       f.kind === "audio"
-                        ? "rgba(128,255,208,0.7)"
+                        ? "rgba(255,93,200,0.7)"
                         : f.kind === "video"
                         ? "rgba(160,216,255,0.7)"
                         : "rgba(255,154,224,0.7)"

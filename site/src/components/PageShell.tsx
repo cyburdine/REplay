@@ -1,4 +1,3 @@
-import { SiteNav } from "./SiteNav";
 import { Footer } from "../sections/Footer";
 
 export const PageShell: React.FC<{ children: React.ReactNode }> = ({ children }) => {
@@ -11,8 +10,6 @@ export const PageShell: React.FC<{ children: React.ReactNode }> = ({ children })
       </div>
       <div className="scan-overlay -z-10" />
       <div className="grain -z-10" />
-
-      <SiteNav transparent />
 
       <div className="relative z-10 flex-1">{children}</div>
 

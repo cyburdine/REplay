@@ -31,8 +31,8 @@ export const SiteNav: React.FC<{ transparent?: boolean }> = ({ transparent }) =>
     <>
       <header
         className={
-          "relative z-30 flex items-center justify-between px-6 md:px-10 py-6 " +
-          (transparent ? "" : "border-b border-white/5 bg-ink/40 backdrop-blur-xl")
+          "sticky top-0 z-50 flex items-center justify-between px-6 md:px-10 py-4 md:py-5 " +
+          "border-b border-white/5 bg-ink/70 backdrop-blur-xl"
         }
       >
         <Link to="/" className="flex items-center group" aria-label="RE:play — home">

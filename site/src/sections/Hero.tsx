@@ -1,5 +1,14 @@
+import { Suspense, lazy } from "react";
 import { DownloadButton } from "../components/DownloadButton";
-import { SiteNav } from "../components/SiteNav";
+import {
+  HeroIconComposition,
+  HERO_DURATION_FRAMES,
+  HERO_SIZE,
+} from "../remotion/HeroIconComposition";
+
+const Player = lazy(() =>
+  import("@remotion/player").then((m) => ({ default: m.Player }))
+);
 
 export const Hero: React.FC = () => {
   return (
@@ -14,28 +23,45 @@ export const Hero: React.FC = () => {
       {/* Stars */}
       <Stars />
 
-      <SiteNav transparent />
+      {/* Remotion orb — large, absolutely positioned so it overflows the
+          right column and bleeds behind the text on the left for depth.
+          pointer-events: none so it never blocks button/link interactions. */}
+      <div
+        className="pointer-events-none absolute z-[2] hidden md:block"
+        style={{
+          top: "50%",
+          right: "-14%",
+          // -46% centers vertically; the extra -400px lifts the icon up so it
+          // sits in line with the headline block on the left, letting the top
+          // of the orb extend above the viewport.
+          transform: "translateY(calc(-46% - 150px))",
+          width: "min(1300px, 110vw)",
+          aspectRatio: "1 / 1",
+        }}
+      >
+        <HeroPlayPulse />
+      </div>
 
       {/* Hero content */}
       <div className="relative z-10 grid md:grid-cols-[1.15fr_1fr] items-center gap-8 px-6 md:px-12 lg:px-20 pt-12 md:pt-20 pb-32 max-w-7xl mx-auto">
         <div>
           <div className="inline-flex items-center gap-2 rounded-full glass px-3 py-1.5 mb-7 text-[11px] text-white/75 tracking-wide">
-            <span className="inline-block w-1.5 h-1.5 rounded-full bg-aurora-mint shadow-[0_0_8px_rgba(128,255,208,0.9)]" />
+            <span className="inline-block w-1.5 h-1.5 rounded-full bg-aurora-mint shadow-[0_0_8px_rgba(255,93,200,0.9)]" />
             v1.0 · macOS 13 Ventura or later
           </div>
 
           <h1 className="font-display text-5xl md:text-7xl lg:text-[88px] leading-[0.92] tracking-[-0.03em] text-white">
             <span className="font-light text-white/85">Less player.</span>
             <br />
-            <span className="font-semibold bg-clip-text text-transparent bg-gradient-to-br from-white via-white to-aurora-mint">
+            <span className="font-semibold bg-clip-text text-transparent bg-gradient-to-br from-white via-aurora-pink to-aurora-violet">
               More play.
             </span>
           </h1>
 
           <p className="mt-7 max-w-xl text-white/70 text-[16px] md:text-[17px] leading-relaxed">
-            A lightweight, native macOS media player. Built with SwiftUI and
-            AVFoundation. Zero third-party dependencies. Audio. Video.
-            Anything AVFoundation speaks.
+            A lightweight, native macOS media player. Built to replace bulky
+            overly featured music libraries. Zero third-party dependencies.
+            Plays Audio. Video. In every format we could think of.
           </p>
 
           <div className="mt-9 flex flex-wrap items-center gap-3">
@@ -48,16 +74,14 @@ export const Hero: React.FC = () => {
             </a>
           </div>
 
-          <div className="mt-6 flex items-center gap-4 text-[12px] text-white/45">
-            <span>~4 MB</span>
-            <span className="w-1 h-1 rounded-full bg-white/30" />
-            <span>Free · open source</span>
-            <span className="w-1 h-1 rounded-full bg-white/30" />
-            <span>Apple Silicon + Intel</span>
-          </div>
         </div>
 
-        <HeroOrb />
+        {/* On mobile the orb gets its own grid cell (smaller, in-flow).
+            On md+ this is hidden and the full-size overflow orb above takes
+            over. */}
+        <div className="md:hidden">
+          <HeroPlayPulse />
+        </div>
       </div>
 
       {/* Bottom fade */}
@@ -66,44 +90,58 @@ export const Hero: React.FC = () => {
   );
 };
 
-const HeroOrb: React.FC = () => {
+const HeroPlayPulse: React.FC = () => {
+  // The hero visual is a Remotion composition rendered live in the page via
+  // @remotion/player — frame-perfect motion graphics (orbital particles,
+  // beat-driven pulse rings, sweeping godrays, conic aurora) that would be
+  // painful to coordinate in plain CSS keyframes.
   return (
-    <div className="relative aspect-square w-full max-w-[440px] mx-auto md:ml-auto">
-      {/* Orbit rings */}
-      <div className="absolute inset-0 rounded-full border border-white/12" />
-      <div className="absolute inset-[10%] rounded-full border border-white/10" />
-      <div className="absolute inset-[22%] rounded-full border border-white/8" />
-      {/* Orbiting dot */}
-      <div
-        className="absolute left-1/2 top-1/2 w-2 h-2 rounded-full bg-white shadow-[0_0_12px_white]"
-        style={{ animation: "orbitSpin 14s linear infinite", transformOrigin: "0 -180px" }}
-      />
-      <style>{`
-        @keyframes orbitSpin {
-          from { transform: translate(-50%, -50%) rotate(0deg) translateY(-180px); }
-          to   { transform: translate(-50%, -50%) rotate(360deg) translateY(-180px); }
-        }
-        @media (prefers-reduced-motion: reduce) {
-          [style*="orbitSpin"] { animation: none !important; }
-        }
-      `}</style>
-      {/* Core */}
-      <div className="absolute inset-[28%] rounded-full orb-glow"
-        style={{
-          background:
-            "radial-gradient(circle at 35% 28%, #ffffff 0%, #c0e8ff 30%, #6080ff 70%, #2030a0 100%)",
-        }}
-      />
-      <div
-        className="absolute inset-[28%] rounded-full mix-blend-overlay opacity-50"
-        style={{
-          background:
-            "radial-gradient(circle at 70% 80%, rgba(160,90,255,0.6), transparent 50%)",
-        }}
-      />
+    <div
+      // Fills whatever container it's placed in. The radial mask feathers
+      // the rectangular Player to a circle so the orb has no visible edges.
+      className="relative aspect-square w-full h-full mx-auto select-none"
+      style={{
+        maskImage:
+          "radial-gradient(circle at 50% 50%, black 28%, rgba(0,0,0,0.9) 45%, rgba(0,0,0,0.5) 65%, rgba(0,0,0,0.15) 80%, transparent 100%)",
+        WebkitMaskImage:
+          "radial-gradient(circle at 50% 50%, black 28%, rgba(0,0,0,0.9) 45%, rgba(0,0,0,0.5) 65%, rgba(0,0,0,0.15) 80%, transparent 100%)",
+      }}
+    >
+      <Suspense fallback={<HeroFallback />}>
+        <Player
+          component={HeroIconComposition}
+          compositionWidth={HERO_SIZE}
+          compositionHeight={HERO_SIZE}
+          fps={30}
+          durationInFrames={HERO_DURATION_FRAMES}
+          autoPlay
+          loop
+          controls={false}
+          clickToPlay={false}
+          doubleClickToFullscreen={false}
+          style={{
+            width: "100%",
+            height: "100%",
+            background: "transparent",
+          }}
+        />
+      </Suspense>
     </div>
   );
 };
+
+const HeroFallback: React.FC = () => (
+  <div className="absolute inset-0 grid place-items-center">
+    <img
+      src="/app-icon.png"
+      alt=""
+      aria-hidden
+      draggable={false}
+      className="w-[55%] h-[55%] object-contain opacity-90"
+      style={{ mixBlendMode: "screen" }}
+    />
+  </div>
+);
 
 const Stars: React.FC = () => {
   // 50 deterministic stars
