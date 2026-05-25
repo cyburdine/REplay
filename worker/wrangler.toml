@@ -1,0 +1,31 @@
+name = "replay-feedback"
+main = "src/index.ts"
+compatibility_date = "2026-05-01"
+workers_dev = false
+
+# Bind the Worker to the marketing-site domain. The `/api/feedback` path
+# is fronted by Cloudflare for cyburdine.com; this route catches it and
+# routes everything else through to the origin (nginx on cyb-proto4).
+[[routes]]
+pattern = "replay.cyburdine.com/api/feedback"
+zone_name = "cyburdine.com"
+
+# R2 bucket holds screenshot uploads. Public access is exposed via a
+# bucket-bound custom domain or the bucket's public r2.dev URL — set the
+# resolved base URL via the SCREENSHOT_PUBLIC_BASE secret.
+[[r2_buckets]]
+binding = "SCREENSHOTS"
+bucket_name = "replay-feedback-screenshots"
+preview_bucket_name = "replay-feedback-screenshots-preview"
+
+[vars]
+GITHUB_REPO = "cyburdine/REplay"
+# Public-facing values (safe to commit). All sensitive values live as
+# secrets set via `wrangler secret put`.
+TURNSTILE_SITE_KEY = "REPLACE_ME_WITH_PUBLIC_SITE_KEY"
+
+# Secrets required (set via `wrangler secret put <NAME>`):
+#   GITHUB_TOKEN              — fine-grained PAT, Issues: Read & write on cyburdine/REplay
+#   SLACK_WEBHOOK_URL         — Slack incoming webhook URL
+#   TURNSTILE_SECRET_KEY      — Turnstile widget secret (verifies the site key)
+#   SCREENSHOT_PUBLIC_BASE    — public base URL for R2 bucket (e.g. https://feedback.replay.cyburdine.com)

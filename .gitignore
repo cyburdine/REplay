@@ -11,3 +11,8 @@ Package.resolved
 site/node_modules/
 site/tsconfig.tsbuildinfo
 site/dist/
+site/.env
+site/.env.local
+worker/node_modules/
+worker/.wrangler/
+worker/.dev.vars
