@@ -10,3 +10,4 @@ Package.resolved
 .superpowers/
 site/node_modules/
 site/tsconfig.tsbuildinfo
+site/dist/

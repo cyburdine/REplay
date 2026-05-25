@@ -1,8 +1,9 @@
 import { DownloadButton } from "../components/DownloadButton";
+import { SiteNav } from "../components/SiteNav";
 
 export const Hero: React.FC = () => {
   return (
-    <section className="relative min-h-[100svh] overflow-hidden">
+    <section id="top" className="relative min-h-[100svh] overflow-hidden">
       {/* Background layers */}
       <div className="absolute inset-0 bg-ink" />
       <div className="aurora-bg" />
@@ -13,26 +14,7 @@ export const Hero: React.FC = () => {
       {/* Stars */}
       <Stars />
 
-      {/* Top nav */}
-      <header className="relative z-10 flex items-center justify-between px-6 md:px-10 py-6">
-        <div className="flex items-center gap-2.5">
-          <span className="inline-block w-2.5 h-2.5 rounded-full bg-gradient-to-br from-white to-aurora-blue shadow-[0_0_10px_rgba(160,216,255,0.6)]" />
-          <span className="font-display text-[15px] font-semibold tracking-tight">RE:play</span>
-        </div>
-        <nav className="hidden md:flex items-center gap-7 text-[13px] text-white/65">
-          <a href="#features" className="hover:text-white transition-colors">Features</a>
-          <a href="#shortcuts" className="hover:text-white transition-colors">Shortcuts</a>
-          <a href="#support" className="hover:text-white transition-colors">Support</a>
-          <a
-            href="https://github.com/your/replay"
-            target="_blank"
-            rel="noreferrer"
-            className="hover:text-white transition-colors"
-          >
-            GitHub ↗
-          </a>
-        </nav>
-      </header>
+      <SiteNav transparent />
 
       {/* Hero content */}
       <div className="relative z-10 grid md:grid-cols-[1.15fr_1fr] items-center gap-8 px-6 md:px-12 lg:px-20 pt-12 md:pt-20 pb-32 max-w-7xl mx-auto">
