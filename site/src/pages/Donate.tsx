@@ -1,10 +1,9 @@
 import { Link } from "react-router-dom";
 import { PageShell } from "../components/PageShell";
 
-// TODO: Replace these placeholder hrefs with real donation links when chosen.
-const DONATE_ONE_TIME = "#";
-const DONATE_MONTHLY = "#";
-const DONATE_SUSTAINING = "#";
+const DONATE_ONE_TIME = "https://buymeacoffee.com/cyburdine";
+const DONATE_MONTHLY = "https://github.com/sponsors/cyburdine";
+const DONATE_SUSTAINING = "https://github.com/sponsors/cyburdine";
 
 export const Donate: React.FC = () => {
   return (
