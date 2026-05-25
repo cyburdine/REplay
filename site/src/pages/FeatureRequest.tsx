@@ -3,19 +3,6 @@ import { PageShell } from "../components/PageShell";
 
 type Kind = "bug" | "feature";
 
-interface FormState {
-  kind: Kind;
-  title: string;
-  description: string;
-  name: string;
-  email: string;
-  expectedBehavior: string;
-  actualBehavior: string;
-  macOSVersion: string;
-  replayVersion: string;
-  screenshot: File | null;
-}
-
 const API_ENDPOINT =
   (import.meta.env.VITE_FEEDBACK_API as string | undefined) ??
   "/api/feedback";
@@ -26,31 +13,23 @@ const TURNSTILE_SITE_KEY =
   (import.meta.env.VITE_TURNSTILE_SITE_KEY as string | undefined) ??
   "0x4AAAAAADWIZf-x9v-AzNZ5";
 
-const INITIAL: FormState = {
-  kind: "feature",
-  title: "",
-  description: "",
-  name: "",
-  email: "",
-  expectedBehavior: "",
-  actualBehavior: "",
-  macOSVersion: "",
-  replayVersion: "",
-  screenshot: null,
-};
-
 export const FeatureRequest: React.FC = () => {
-  const [form, setForm] = useState<FormState>(INITIAL);
+  // Only state that actually needs React: things that drive conditional UI.
+  // Text inputs are uncontrolled — we read them from the <form> on submit.
+  const [kind, setKind] = useState<Kind>("feature");
+  const [screenshot, setScreenshot] = useState<File | null>(null);
   const [submitting, setSubmitting] = useState(false);
+  const [formKey, setFormKey] = useState(0);
   const [result, setResult] = useState<
     | { status: "idle" }
     | { status: "success"; issueUrl: string }
     | { status: "error"; message: string }
   >({ status: "idle" });
 
+  const formRef = useRef<HTMLFormElement>(null);
   const turnstileRef = useRef<HTMLDivElement>(null);
   const turnstileWidgetId = useRef<string | null>(null);
-  const [turnstileToken, setTurnstileToken] = useState<string>("");
+  const turnstileTokenRef = useRef<string>("");
 
   useEffect(() => {
     if (!TURNSTILE_SITE_KEY) return;
@@ -69,9 +48,15 @@ export const FeatureRequest: React.FC = () => {
       if (!ts || !turnstileRef.current || turnstileWidgetId.current) return false;
       turnstileWidgetId.current = ts.render(turnstileRef.current, {
         sitekey: TURNSTILE_SITE_KEY,
-        callback: (token: string) => setTurnstileToken(token),
-        "error-callback": () => setTurnstileToken(""),
-        "expired-callback": () => setTurnstileToken(""),
+        callback: (token: string) => {
+          turnstileTokenRef.current = token;
+        },
+        "error-callback": () => {
+          turnstileTokenRef.current = "";
+        },
+        "expired-callback": () => {
+          turnstileTokenRef.current = "";
+        },
       });
       return true;
     };
@@ -84,48 +69,52 @@ export const FeatureRequest: React.FC = () => {
     }
   }, []);
 
-  function set<K extends keyof FormState>(key: K, value: FormState[K]) {
-    setForm((prev) => ({ ...prev, [key]: value }));
-  }
-
   function resetTurnstile() {
     const ts = (window as Window & { turnstile?: TurnstileApi }).turnstile;
     if (ts && turnstileWidgetId.current) {
       ts.reset(turnstileWidgetId.current);
-      setTurnstileToken("");
+      turnstileTokenRef.current = "";
     }
   }
 
-  async function submit(e: React.FormEvent) {
+  async function submit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     if (submitting) return;
     setResult({ status: "idle" });
     setSubmitting(true);
 
     try {
-      const body = new FormData();
-      body.append("kind", form.kind);
-      body.append("title", form.title);
-      body.append("description", form.description);
-      body.append("name", form.name);
-      body.append("email", form.email);
-      if (form.kind === "bug") {
-        body.append("expectedBehavior", form.expectedBehavior);
-        body.append("actualBehavior", form.actualBehavior);
-        body.append("macOSVersion", form.macOSVersion);
-        body.append("replayVersion", form.replayVersion);
-      }
-      if (form.screenshot) body.append("screenshot", form.screenshot);
-      body.append("turnstileToken", turnstileToken);
+      const formEl = e.currentTarget;
+      const data = new FormData(formEl);
 
-      const res = await fetch(API_ENDPOINT, { method: "POST", body });
-      const data = (await res.json()) as { ok?: boolean; issueUrl?: string; error?: string };
+      // FormData captures every named input, including kind (radio), the file
+      // input, and the bug-only fields. The bug-only fields are still in the
+      // DOM when the form is in feature mode (just hidden), but they're empty,
+      // and the Worker only uses them when kind === "bug".
+      data.set("kind", kind);
+      if (screenshot) data.set("screenshot", screenshot);
+      else data.delete("screenshot");
+      data.set("turnstileToken", turnstileTokenRef.current);
 
-      if (!res.ok || !data.ok || !data.issueUrl) {
-        throw new Error(data.error ?? `Server returned ${res.status}`);
+      // Cheap client-side guards so we don't round-trip on obvious misses.
+      const title = String(data.get("title") ?? "").trim();
+      const description = String(data.get("description") ?? "").trim();
+      if (!title) throw new Error("Title is required");
+      if (!description) throw new Error("Description is required");
+      if (TURNSTILE_SITE_KEY && !turnstileTokenRef.current) {
+        throw new Error("Please complete the captcha before submitting");
       }
-      setResult({ status: "success", issueUrl: data.issueUrl });
-      setForm(INITIAL);
+
+      const res = await fetch(API_ENDPOINT, { method: "POST", body: data });
+      const json = (await res.json()) as { ok?: boolean; issueUrl?: string; error?: string };
+
+      if (!res.ok || !json.ok || !json.issueUrl) {
+        throw new Error(json.error ?? `Server returned ${res.status}`);
+      }
+      setResult({ status: "success", issueUrl: json.issueUrl });
+      formEl.reset();
+      setScreenshot(null);
+      setFormKey((k) => k + 1);
       resetTurnstile();
     } catch (err) {
       const message = err instanceof Error ? err.message : "Submission failed";
@@ -136,23 +125,19 @@ export const FeatureRequest: React.FC = () => {
     }
   }
 
-  const canSubmit =
-    !submitting &&
-    form.title.trim().length > 0 &&
-    form.description.trim().length > 0 &&
-    (!!turnstileToken || !TURNSTILE_SITE_KEY);
-
   if (result.status === "success") {
     return (
       <PageShell>
         <SuccessPanel
-          kind={form.kind}
+          kind={kind}
           issueUrl={result.issueUrl}
           onReset={() => setResult({ status: "idle" })}
         />
       </PageShell>
     );
   }
+
+  const isBug = kind === "bug";
 
   return (
     <PageShell>
@@ -174,87 +159,77 @@ export const FeatureRequest: React.FC = () => {
         </div>
 
         <form
+          key={formKey}
+          ref={formRef}
           onSubmit={submit}
           className="p-6 md:p-8 rounded-2xl glass space-y-6"
           encType="multipart/form-data"
+          noValidate
         >
-          <KindToggle value={form.kind} onChange={(v) => set("kind", v)} />
+          <KindToggle value={kind} onChange={setKind} />
 
           <Field
             label="Title"
-            value={form.title}
-            onChange={(v) => set("title", v)}
+            name="title"
             placeholder={
-              form.kind === "bug"
-                ? "Short summary of the bug"
-                : "Short summary of the feature"
+              isBug ? "Short summary of the bug" : "Short summary of the feature"
             }
             required
           />
 
           <FieldArea
-            label={form.kind === "bug" ? "What happened?" : "What should RE:play do?"}
-            value={form.description}
-            onChange={(v) => set("description", v)}
+            label={isBug ? "What happened?" : "What should RE:play do?"}
+            name="description"
             placeholder={
-              form.kind === "bug"
+              isBug
                 ? "Describe the problem. Include what you did right before it happened."
                 : "Be as specific as you like — the goal, what's missing, what would make it click."
             }
             required
           />
 
-          {form.kind === "bug" && (
-            <>
-              <div className="grid md:grid-cols-2 gap-4">
-                <FieldArea
-                  label="Expected behavior"
-                  value={form.expectedBehavior}
-                  onChange={(v) => set("expectedBehavior", v)}
-                  placeholder="What you thought would happen"
-                  rows={3}
-                />
-                <FieldArea
-                  label="Actual behavior"
-                  value={form.actualBehavior}
-                  onChange={(v) => set("actualBehavior", v)}
-                  placeholder="What actually happened"
-                  rows={3}
-                />
-              </div>
-              <div className="grid md:grid-cols-2 gap-4">
-                <Field
-                  label="macOS version"
-                  value={form.macOSVersion}
-                  onChange={(v) => set("macOSVersion", v)}
-                  placeholder="e.g. 14.2.1 (Sonoma)"
-                />
-                <Field
-                  label="REplay version"
-                  value={form.replayVersion}
-                  onChange={(v) => set("replayVersion", v)}
-                  placeholder="see About → RE:play"
-                />
-              </div>
-              <ScreenshotField
-                file={form.screenshot}
-                onChange={(f) => set("screenshot", f)}
+          {/* Bug-only fields stay mounted (just hidden) so toggling kind is a
+              CSS show/hide, not a remount. Way less layout work. */}
+          <div className={isBug ? "space-y-6" : "hidden"} aria-hidden={!isBug}>
+            <div className="grid md:grid-cols-2 gap-4">
+              <FieldArea
+                label="Expected behavior"
+                name="expectedBehavior"
+                placeholder="What you thought would happen"
+                rows={3}
               />
-            </>
-          )}
+              <FieldArea
+                label="Actual behavior"
+                name="actualBehavior"
+                placeholder="What actually happened"
+                rows={3}
+              />
+            </div>
+            <div className="grid md:grid-cols-2 gap-4">
+              <Field
+                label="macOS version"
+                name="macOSVersion"
+                placeholder="e.g. 14.2.1 (Sonoma)"
+              />
+              <Field
+                label="REplay version"
+                name="replayVersion"
+                placeholder="see About → RE:play"
+              />
+            </div>
+            <ScreenshotField file={screenshot} onChange={setScreenshot} />
+          </div>
 
           <div className="grid md:grid-cols-2 gap-4 pt-2 border-t border-white/5">
             <Field
               label="Your name"
-              value={form.name}
-              onChange={(v) => set("name", v)}
+              name="name"
               placeholder="Optional"
               autoComplete="name"
             />
             <Field
               label="Email (for reply)"
-              value={form.email}
-              onChange={(v) => set("email", v)}
+              name="email"
               placeholder="Optional, you@example.com"
               type="email"
               autoComplete="email"
@@ -276,17 +251,17 @@ export const FeatureRequest: React.FC = () => {
           <div className="flex items-center gap-4 pt-2">
             <button
               type="submit"
-              disabled={!canSubmit}
+              disabled={submitting}
               className={
                 "inline-flex items-center gap-2 px-6 py-3 rounded-xl text-[14px] font-medium transition-all " +
-                (canSubmit
-                  ? "bg-aurora-mint text-ink hover:bg-aurora-mint/90"
-                  : "bg-white/10 text-white/40 cursor-not-allowed")
+                (submitting
+                  ? "bg-white/10 text-white/40 cursor-not-allowed"
+                  : "bg-aurora-mint text-ink hover:bg-aurora-mint/90")
               }
             >
               {submitting
                 ? "Submitting…"
-                : form.kind === "bug"
+                : isBug
                   ? "Submit bug report"
                   : "Submit feature request"}
               {!submitting && <span aria-hidden>→</span>}
@@ -372,7 +347,7 @@ const KindToggle: React.FC<{ value: Kind; onChange: (v: Kind) => void }> = ({
           aria-selected={active}
           onClick={() => onChange(k)}
           className={
-            "px-4 py-2 rounded-lg text-[13px] font-medium transition-all " +
+            "px-4 py-2 rounded-lg text-[13px] font-medium transition-colors " +
             (active
               ? "bg-white text-ink shadow-sm"
               : "text-white/65 hover:text-white")
@@ -387,13 +362,12 @@ const KindToggle: React.FC<{ value: Kind; onChange: (v: Kind) => void }> = ({
 
 const Field: React.FC<{
   label: string;
-  value: string;
-  onChange: (v: string) => void;
+  name: string;
   placeholder?: string;
   type?: string;
   autoComplete?: string;
   required?: boolean;
-}> = ({ label, value, onChange, placeholder, type = "text", autoComplete, required }) => (
+}> = ({ label, name, placeholder, type = "text", autoComplete, required }) => (
   <label className="flex flex-col gap-2">
     <span className="text-[12px] uppercase tracking-[0.14em] text-white/50">
       {label}
@@ -401,36 +375,33 @@ const Field: React.FC<{
     </span>
     <input
       type={type}
-      value={value}
-      onChange={(e) => onChange(e.target.value)}
+      name={name}
+      defaultValue=""
       placeholder={placeholder}
       autoComplete={autoComplete}
-      required={required}
-      className="px-4 py-3 rounded-xl bg-white/[0.04] border border-white/10 focus:border-aurora-mint/60 focus:bg-white/[0.06] outline-none text-white/95 text-[14px] placeholder:text-white/30 transition-colors"
+      className="px-4 py-3 rounded-xl bg-white/[0.04] border border-white/10 focus:border-aurora-mint/60 focus:bg-white/[0.06] outline-none text-white/95 text-[14px] placeholder:text-white/30"
     />
   </label>
 );
 
 const FieldArea: React.FC<{
   label: string;
-  value: string;
-  onChange: (v: string) => void;
+  name: string;
   placeholder?: string;
   rows?: number;
   required?: boolean;
-}> = ({ label, value, onChange, placeholder, rows = 6, required }) => (
+}> = ({ label, name, placeholder, rows = 6, required }) => (
   <label className="flex flex-col gap-2">
     <span className="text-[12px] uppercase tracking-[0.14em] text-white/50">
       {label}
       {required && <span className="text-aurora-mint/80"> *</span>}
     </span>
     <textarea
-      value={value}
-      onChange={(e) => onChange(e.target.value)}
+      name={name}
+      defaultValue=""
       placeholder={placeholder}
       rows={rows}
-      required={required}
-      className="px-4 py-3 rounded-xl bg-white/[0.04] border border-white/10 focus:border-aurora-mint/60 focus:bg-white/[0.06] outline-none text-white/95 text-[14px] placeholder:text-white/30 resize-y transition-colors leading-relaxed"
+      className="px-4 py-3 rounded-xl bg-white/[0.04] border border-white/10 focus:border-aurora-mint/60 focus:bg-white/[0.06] outline-none text-white/95 text-[14px] placeholder:text-white/30 resize-y leading-relaxed"
     />
   </label>
 );
@@ -489,7 +460,7 @@ const ScreenshotField: React.FC<{
         <button
           type="button"
           onClick={() => inputRef.current?.click()}
-          className="rounded-xl glass px-5 py-4 text-[14px] text-white/70 hover:text-white hover:bg-white/[0.06] transition-colors text-left"
+          className="rounded-xl glass px-5 py-4 text-[14px] text-white/70 hover:text-white hover:bg-white/[0.06] text-left"
         >
           + Attach a screenshot
         </button>
@@ -505,7 +476,6 @@ const Tip: React.FC<{ title: string; detail: string }> = ({ title, detail }) => 
   </div>
 );
 
-// Minimal type for the Turnstile JS API. Avoids pulling in a dep just for types.
 interface TurnstileApi {
   render: (
     container: HTMLElement,
