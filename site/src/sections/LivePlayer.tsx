@@ -1,84 +1,107 @@
 import { Suspense, lazy, useCallback, useEffect, useRef, useState } from "react";
-import type { PlayerRef } from "@remotion/player";
 import { REplayComposition } from "../remotion/REplayComposition";
-import { FPS, TOTAL_FRAMES, TRACKS, frameWithinTrack, trackStartFrame } from "../remotion/tracks";
+import { FPS, TOTAL_FRAMES, TRACKS, trackSrc } from "../remotion/tracks";
 
 const Player = lazy(() =>
   import("@remotion/player").then((m) => ({ default: m.Player }))
 );
 
 export const LivePlayer: React.FC = () => {
-  const playerRef = useRef<PlayerRef | null>(null);
-  const [isPlaying, setIsPlaying] = useState(true);
-  const [frame, setFrame] = useState(0);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+  const [selectedIndex, setSelectedIndex] = useState(0);
+  const [isPlaying, setIsPlaying] = useState(false);
   const [muted, setMuted] = useState(true);
+  const [currentTime, setCurrentTime] = useState(0);
+  const [showPlaylist, setShowPlaylist] = useState(false);
 
-  // Subscribe to player events for play/pause + frame
-  useEffect(() => {
-    const player = playerRef.current;
-    if (!player) return;
-    const onPlay = () => setIsPlaying(true);
-    const onPause = () => setIsPlaying(false);
-    const onFrame = (e: { detail: { frame: number } }) => setFrame(e.detail.frame);
-    player.addEventListener("play", onPlay);
-    player.addEventListener("pause", onPause);
-    player.addEventListener("frameupdate", onFrame);
-    return () => {
-      player.removeEventListener("play", onPlay);
-      player.removeEventListener("pause", onPause);
-      player.removeEventListener("frameupdate", onFrame);
-    };
+  const track = TRACKS[selectedIndex];
+  const progress =
+    track.durationSeconds > 0
+      ? Math.min(1, currentTime / track.durationSeconds)
+      : 0;
+
+  // Auto-hide playlist after a short pause
+  const playlistTimer = useRef<number | null>(null);
+  const flashPlaylist = useCallback(() => {
+    setShowPlaylist(true);
+    if (playlistTimer.current) window.clearTimeout(playlistTimer.current);
+    playlistTimer.current = window.setTimeout(() => {
+      setShowPlaylist(false);
+      playlistTimer.current = null;
+    }, 5000);
   }, []);
 
   const togglePlay = useCallback(() => {
-    const p = playerRef.current;
-    if (!p) return;
-    if (p.isPlaying()) p.pause();
-    else p.play();
+    const a = audioRef.current;
+    if (!a) return;
+    if (a.paused) {
+      void a.play();
+    } else {
+      a.pause();
+    }
   }, []);
 
-  const seekToTrack = useCallback((index: number) => {
-    const p = playerRef.current;
-    if (!p) return;
-    p.seekTo(trackStartFrame(index));
-    p.play();
+  const toggleMute = useCallback(() => {
+    setMuted((m) => {
+      const next = !m;
+      if (audioRef.current) audioRef.current.muted = next;
+      return next;
+    });
   }, []);
 
-  const within = frameWithinTrack(frame);
-  const track = TRACKS[within.index];
+  const selectTrack = useCallback(
+    (index: number) => {
+      setSelectedIndex(index);
+      flashPlaylist();
+      // Defer play() until after the new src is loaded
+      requestAnimationFrame(() => {
+        const a = audioRef.current;
+        if (!a) return;
+        a.currentTime = 0;
+        void a.play();
+      });
+    },
+    [flashPlaylist]
+  );
 
-  // Keyboard shortcuts when the section is in view & focused
+  // Keep <audio>.muted in sync if user toggles
+  useEffect(() => {
+    if (audioRef.current) audioRef.current.muted = muted;
+  }, [muted]);
+
+  // Reset current time when track changes
+  useEffect(() => {
+    setCurrentTime(0);
+  }, [selectedIndex]);
+
+  // Keyboard shortcuts when the section is in view
   const sectionRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
-      // Only act if the section is roughly in view
       const rect = sectionRef.current?.getBoundingClientRect();
       if (!rect) return;
       const inView = rect.top < window.innerHeight * 0.7 && rect.bottom > 0;
       if (!inView) return;
-      // Don't intercept when typing in inputs
       const tag = (e.target as HTMLElement)?.tagName?.toLowerCase();
       if (tag === "input" || tag === "textarea") return;
 
-      const p = playerRef.current;
-      if (!p) return;
+      const a = audioRef.current;
+      if (!a) return;
       if (e.code === "Space") {
         e.preventDefault();
-        if (p.isPlaying()) p.pause();
-        else p.play();
+        if (a.paused) void a.play();
+        else a.pause();
       } else if (e.key === "ArrowRight") {
-        const cur = p.getCurrentFrame();
-        p.seekTo(Math.min(TOTAL_FRAMES - 1, cur + FPS * 5));
+        a.currentTime = Math.min(track.durationSeconds, a.currentTime + 5);
       } else if (e.key === "ArrowLeft") {
-        const cur = p.getCurrentFrame();
-        p.seekTo(Math.max(0, cur - FPS * 5));
+        a.currentTime = Math.max(0, a.currentTime - 5);
       } else if (e.key.toLowerCase() === "m") {
-        setMuted((m) => !m);
+        toggleMute();
       }
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, []);
+  }, [toggleMute, track.durationSeconds]);
 
   return (
     <section
@@ -114,8 +137,13 @@ export const LivePlayer: React.FC = () => {
           >
             <Suspense fallback={<PlayerSkeleton />}>
               <Player
-                ref={playerRef}
-                component={REplayComposition}
+                component={REplayComposition as React.FC<Record<string, unknown>>}
+                inputProps={{
+                  trackIndex: selectedIndex,
+                  progress,
+                  showPlaylist,
+                  isPlaying,
+                }}
                 durationInFrames={TOTAL_FRAMES}
                 compositionWidth={1280}
                 compositionHeight={800}
@@ -139,83 +167,63 @@ export const LivePlayer: React.FC = () => {
               style={{ background: "transparent" }}
             />
 
-            {/* Center play overlay when paused */}
-            {!isPlaying && (
-              <div className="pointer-events-none absolute inset-0 z-20 flex items-center justify-center">
-                <div
-                  className="w-20 h-20 rounded-full flex items-center justify-center"
-                  style={{
-                    background:
-                      "linear-gradient(180deg, rgba(255,255,255,0.9), rgba(220,230,255,0.85))",
-                    boxShadow:
-                      "0 20px 60px rgba(160,90,255,0.55), inset 0 1px 0 rgba(255,255,255,0.9)",
-                  }}
-                >
-                  <span className="text-2xl text-ink ml-1">▶</span>
-                </div>
-              </div>
-            )}
           </div>
 
-          {/* External controls (in-browser, not part of the comp) */}
-          <div className="mt-4 px-2 flex items-center justify-between gap-4 flex-wrap">
-            <div className="flex items-center gap-2 text-[12px] text-white/55">
-              <span className="font-mono">{formatTime(within.local / FPS)}</span>
-              <span>/</span>
-              <span className="font-mono">{formatTime(within.length / FPS)}</span>
-              <span className="ml-3 text-white/40 hidden sm:inline">
-                Now: <span className="text-white/75">{track.title}</span>
-                <span className="text-white/35"> — {track.artist}</span>
-              </span>
-            </div>
-            <div className="flex items-center gap-2">
-              {TRACKS.map((t, i) => (
-                <button
-                  key={i}
-                  onClick={() => seekToTrack(i)}
-                  className={
-                    "text-[11px] px-2.5 py-1 rounded-full border transition-colors " +
-                    (i === within.index
-                      ? "bg-white/90 text-ink border-white"
-                      : "border-white/15 text-white/70 hover:bg-white/10")
-                  }
-                >
-                  {t.title}
-                </button>
-              ))}
+          {/* Hidden audio element drives real playback */}
+          <audio
+            ref={audioRef}
+            src={trackSrc(track)}
+            preload="metadata"
+            onPlay={() => setIsPlaying(true)}
+            onPause={() => setIsPlaying(false)}
+            onTimeUpdate={(e) => setCurrentTime(e.currentTarget.currentTime)}
+            onEnded={() => {
+              const next = (selectedIndex + 1) % TRACKS.length;
+              selectTrack(next);
+            }}
+          />
+
+          {/* External controls */}
+          <div className="mt-4 px-2 flex items-center justify-center gap-2 flex-nowrap overflow-x-auto">
+            {TRACKS.map((t, i) => (
               <button
-                onClick={togglePlay}
-                className="ml-2 px-3 py-1.5 rounded-full bg-white text-ink text-[12px] font-medium"
+                key={i}
+                onClick={() => selectTrack(i)}
+                className={
+                  "shrink-0 text-[11px] px-2.5 py-1 rounded-full border transition-colors whitespace-nowrap " +
+                  (i === selectedIndex
+                    ? "bg-white/90 text-ink border-white"
+                    : "border-white/15 text-white/70 hover:bg-white/10")
+                }
               >
-                {isPlaying ? "❚❚ Pause" : "▶ Play"}
+                {t.title}
               </button>
-              <button
-                onClick={() => setMuted((m) => !m)}
-                className="px-3 py-1.5 rounded-full border border-white/15 text-white/70 text-[12px] hover:bg-white/10"
-                aria-label={muted ? "Unmute" : "Mute"}
-                title="Audio is decorative — visualizer is rendered from a deterministic spectrum"
-              >
-                {muted ? "🔇 Muted" : "🔊 On"}
-              </button>
-            </div>
+            ))}
+            <button
+              onClick={togglePlay}
+              className="shrink-0 ml-2 px-3 py-1.5 rounded-full bg-white text-ink text-[12px] font-medium whitespace-nowrap"
+            >
+              {isPlaying ? "❚❚ Pause" : "▶ Play"}
+            </button>
+            <button
+              onClick={toggleMute}
+              className="shrink-0 px-3 py-1.5 rounded-full border border-white/15 text-white/70 text-[12px] hover:bg-white/10 whitespace-nowrap"
+              aria-label={muted ? "Unmute" : "Mute"}
+            >
+              {muted ? "🔇 Muted" : "🔊 On"}
+            </button>
           </div>
 
           <div className="px-2 mt-3 text-[11px] text-white/35 text-center">
             Tip: <kbd className="font-mono">Space</kbd> to play/pause ·{" "}
-            <kbd className="font-mono">←/→</kbd> to scrub
+            <kbd className="font-mono">←/→</kbd> to scrub ·{" "}
+            <kbd className="font-mono">M</kbd> to mute
           </div>
         </div>
       </div>
     </section>
   );
 };
-
-function formatTime(seconds: number): string {
-  const s = Math.max(0, Math.floor(seconds));
-  const m = Math.floor(s / 60);
-  const r = s % 60;
-  return `${m}:${r.toString().padStart(2, "0")}`;
-}
 
 const PlayerSkeleton: React.FC = () => (
   <div className="absolute inset-0 grid place-items-center">

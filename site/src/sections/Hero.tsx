@@ -102,9 +102,9 @@ const HeroPlayPulse: React.FC = () => {
       className="relative aspect-square w-full h-full mx-auto select-none"
       style={{
         maskImage:
-          "radial-gradient(circle at 50% 50%, black 28%, rgba(0,0,0,0.9) 45%, rgba(0,0,0,0.5) 65%, rgba(0,0,0,0.15) 80%, transparent 100%)",
+          "radial-gradient(circle closest-side at 50% 50%, black 55%, rgba(0,0,0,0.85) 75%, rgba(0,0,0,0.3) 92%, transparent 100%)",
         WebkitMaskImage:
-          "radial-gradient(circle at 50% 50%, black 28%, rgba(0,0,0,0.9) 45%, rgba(0,0,0,0.5) 65%, rgba(0,0,0,0.15) 80%, transparent 100%)",
+          "radial-gradient(circle closest-side at 50% 50%, black 55%, rgba(0,0,0,0.85) 75%, rgba(0,0,0,0.3) 92%, transparent 100%)",
       }}
     >
       <Suspense fallback={<HeroFallback />}>

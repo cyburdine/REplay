@@ -1,6 +1,6 @@
-import { AbsoluteFill, useCurrentFrame, useVideoConfig, interpolate } from "remotion";
+import { AbsoluteFill, useCurrentFrame } from "remotion";
 import { Visualizer } from "./Visualizer";
-import { TRACKS, frameWithinTrack, FPS } from "./tracks";
+import { TRACKS } from "./tracks";
 
 function formatTime(seconds: number): string {
   const s = Math.max(0, Math.floor(seconds));
@@ -9,36 +9,32 @@ function formatTime(seconds: number): string {
   return `${m}:${r.toString().padStart(2, "0")}`;
 }
 
-export const REplayComposition: React.FC = () => {
+export type REplayCompositionProps = {
+  trackIndex: number;
+  progress: number; // 0..1
+  showPlaylist: boolean;
+  isPlaying: boolean;
+  [key: string]: unknown;
+};
+
+export const REplayComposition: React.FC<REplayCompositionProps> = ({
+  trackIndex,
+  progress,
+  showPlaylist,
+  isPlaying,
+}) => {
   const frame = useCurrentFrame();
-  const { width, height, durationInFrames } = useVideoConfig();
-  const within = frameWithinTrack(frame);
-  const track = TRACKS[within.index];
+  const track = TRACKS[trackIndex] ?? TRACKS[0];
 
-  const trackProgress = within.local / within.length; // 0..1
-  const elapsedSeconds = (within.local / FPS);
-  const totalSeconds = within.length / FPS;
-
-  // Track-title crossfade
-  const fadeIn = interpolate(within.local, [0, 10], [0, 1], { extrapolateRight: "clamp" });
-  const fadeOut = interpolate(within.local, [within.length - 10, within.length], [1, 0], { extrapolateLeft: "clamp" });
-  const titleOpacity = Math.min(fadeIn, fadeOut);
+  const elapsedSeconds = progress * track.durationSeconds;
+  const totalSeconds = track.durationSeconds;
 
   // Window subtle breathing scale (very gentle)
   const breathe = 1 + Math.sin(frame / 60) * 0.003;
 
-  // Playlist slides in for the middle 60% of the loop
-  const playlistVisible =
-    frame > durationInFrames * 0.2 && frame < durationInFrames * 0.85;
-  const playlistX = interpolate(
-    frame,
-    [durationInFrames * 0.2, durationInFrames * 0.25, durationInFrames * 0.8, durationInFrames * 0.85],
-    [320, 0, 0, 320],
-    { extrapolateLeft: "clamp", extrapolateRight: "clamp" }
-  );
-
   const winW = 920;
   const winH = 540;
+  const playlistW = 320;
 
   return (
     <AbsoluteFill
@@ -67,11 +63,11 @@ export const REplayComposition: React.FC = () => {
           {/* Title bar */}
           <div
             style={{
-              height: 36,
+              height: 40,
               display: "flex",
               alignItems: "center",
               padding: "0 14px",
-              gap: 8,
+              gap: 12,
               background:
                 "linear-gradient(180deg, rgba(255,255,255,0.07), rgba(255,255,255,0.0))",
               borderBottom: "1px solid rgba(255,255,255,0.06)",
@@ -82,98 +78,39 @@ export const REplayComposition: React.FC = () => {
               <span style={dot("#febc2e")} />
               <span style={dot("#28c840")} />
             </div>
-            <div
+            <img
+              src="/logo-wordmark.png"
+              alt="RE:play"
               style={{
-                position: "absolute",
-                left: 0,
-                right: 0,
-                textAlign: "center",
-                color: "rgba(255,255,255,0.55)",
-                fontSize: 12,
-                letterSpacing: 0.3,
-                fontWeight: 500,
-                pointerEvents: "none",
+                height: 18,
+                width: "auto",
+                opacity: 0.9,
+                display: "block",
               }}
-            >
-              RE:play
-            </div>
+            />
           </div>
 
           {/* Body */}
-          <div style={{ display: "flex", height: winH - 36 - 72 }}>
-            {/* Main visualizer pane */}
+          <div style={{ display: "flex", height: winH - 40 - 72, position: "relative" }}>
+            {/* Playlist drawer (slides in from the right edge) */}
             <div
               style={{
-                flex: 1,
-                position: "relative",
+                position: "absolute",
+                top: 0,
+                bottom: 0,
+                right: 0,
+                width: playlistW,
+                zIndex: 2,
+                transform: `translateX(${showPlaylist ? 0 : playlistW}px)`,
+                transition: "transform 380ms cubic-bezier(0.22, 1, 0.36, 1)",
                 background:
-                  "radial-gradient(circle at 50% 60%, rgba(80,100,255,0.10), transparent 70%)",
-              }}
-            >
-              {/* Track meta */}
-              <div
-                style={{
-                  position: "absolute",
-                  top: 28,
-                  left: 0,
-                  right: 0,
-                  textAlign: "center",
-                  opacity: titleOpacity,
-                  transition: "opacity 60ms linear",
-                }}
-              >
-                <div
-                  style={{
-                    fontSize: 11,
-                    letterSpacing: 2,
-                    textTransform: "uppercase",
-                    color: "rgba(255,255,255,0.45)",
-                    marginBottom: 6,
-                  }}
-                >
-                  Now Playing
-                </div>
-                <div style={{ fontSize: 22, fontWeight: 600, color: "#fff" }}>
-                  {track.title}
-                </div>
-                <div
-                  style={{
-                    fontSize: 13,
-                    color: "rgba(255,255,255,0.6)",
-                    marginTop: 2,
-                  }}
-                >
-                  {track.artist}
-                </div>
-              </div>
-
-              {/* Visualizer center */}
-              <div
-                style={{
-                  position: "absolute",
-                  left: 24,
-                  right: 24,
-                  top: 130,
-                  bottom: 24,
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                }}
-              >
-                <Visualizer width={playlistVisible ? winW - 320 - 48 : winW - 48} height={210} />
-              </div>
-            </div>
-
-            {/* Playlist drawer */}
-            <div
-              style={{
-                width: 320,
-                transform: `translateX(${playlistX}px)`,
-                background:
-                  "linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.01))",
+                  "linear-gradient(180deg, rgba(22,22,30,0.96), rgba(14,14,22,0.96))",
                 borderLeft: "1px solid rgba(255,255,255,0.06)",
                 padding: "20px 0",
                 overflow: "hidden",
+                boxShadow: showPlaylist
+                  ? "-8px 0 24px rgba(0,0,0,0.35)"
+                  : "none",
               }}
             >
               <div
@@ -188,7 +125,7 @@ export const REplayComposition: React.FC = () => {
                 Playlist · {TRACKS.length} tracks
               </div>
               {TRACKS.map((t, i) => {
-                const active = i === within.index;
+                const active = i === trackIndex;
                 return (
                   <div
                     key={i}
@@ -245,11 +182,76 @@ export const REplayComposition: React.FC = () => {
                         fontVariantNumeric: "tabular-nums",
                       }}
                     >
-                      {formatTime(t.durationFrames / FPS)}
+                      {formatTime(t.durationSeconds)}
                     </div>
                   </div>
                 );
               })}
+            </div>
+
+            {/* Main visualizer pane */}
+            <div
+              style={{
+                flex: 1,
+                position: "relative",
+                background:
+                  "radial-gradient(circle at 50% 60%, rgba(80,100,255,0.10), transparent 70%)",
+              }}
+            >
+              {/* Track meta */}
+              <div
+                style={{
+                  position: "absolute",
+                  top: 28,
+                  left: 0,
+                  right: 0,
+                  textAlign: "center",
+                }}
+              >
+                <div
+                  style={{
+                    fontSize: 11,
+                    letterSpacing: 2,
+                    textTransform: "uppercase",
+                    color: "rgba(255,255,255,0.45)",
+                    marginBottom: 6,
+                  }}
+                >
+                  Now Playing
+                </div>
+                <div style={{ fontSize: 22, fontWeight: 600, color: "#fff" }}>
+                  {track.title}
+                </div>
+                <div
+                  style={{
+                    fontSize: 13,
+                    color: "rgba(255,255,255,0.6)",
+                    marginTop: 2,
+                  }}
+                >
+                  {track.artist}
+                </div>
+              </div>
+
+              {/* Visualizer center */}
+              <div
+                style={{
+                  position: "absolute",
+                  left: 24,
+                  right: 24,
+                  top: 130,
+                  bottom: 24,
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+              >
+                <Visualizer
+                  width={winW - 48}
+                  height={210}
+                  intensity={isPlaying ? 1 : 0.25}
+                />
+              </div>
             </div>
           </div>
 
@@ -272,7 +274,7 @@ export const REplayComposition: React.FC = () => {
             }}
           >
             <div style={controlBtn()}>⏮</div>
-            <div style={{ ...controlBtn(true) }}>▶</div>
+            <div style={controlBtn(true)}>{isPlaying ? "❚❚" : "▶"}</div>
             <div style={controlBtn()}>⏭</div>
 
             <div
@@ -302,7 +304,7 @@ export const REplayComposition: React.FC = () => {
                   left: 0,
                   top: 0,
                   bottom: 0,
-                  width: `${trackProgress * 100}%`,
+                  width: `${progress * 100}%`,
                   background:
                     "linear-gradient(90deg, #a0d8ff, #ffffff)",
                   borderRadius: 999,
@@ -312,7 +314,7 @@ export const REplayComposition: React.FC = () => {
               <div
                 style={{
                   position: "absolute",
-                  left: `${trackProgress * 100}%`,
+                  left: `${progress * 100}%`,
                   top: "50%",
                   transform: "translate(-50%, -50%)",
                   width: 10,
@@ -389,3 +391,4 @@ function controlBtn(primary = false): React.CSSProperties {
     flex: "0 0 auto",
   };
 }
+

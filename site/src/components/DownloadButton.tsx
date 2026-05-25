@@ -16,7 +16,7 @@ export const DownloadButton: React.FC<{ large?: boolean; label?: string }> = ({
         background:
           "linear-gradient(180deg, #ffffff 0%, #e9f0ff 100%)",
         boxShadow:
-          "0 14px 40px rgba(120,170,255,0.25), 0 0 0 1px rgba(255,255,255,0.4), inset 0 1px 0 rgba(255,255,255,0.9)",
+          "0 14px 40px rgba(160,90,255,0.30), 0 0 0 1px rgba(255,255,255,0.4), inset 0 1px 0 rgba(255,255,255,0.9)",
       }}
     >
       <AppleGlyph />

@@ -12,7 +12,7 @@
     -moz-osx-font-smoothing: grayscale;
     overflow-x: hidden;
   }
-  ::selection { background: rgba(128,255,208,0.25); color: #fff; }
+  ::selection { background: rgba(255,93,200,0.28); color: #fff; }
 }
 
 /* ---------- Aurora background (full page) ---------- */
@@ -21,19 +21,19 @@
   inset: -10%;
   pointer-events: none;
   background:
-    radial-gradient(60% 40% at 30% 25%, rgba(80,255,200,0.55), transparent 60%),
+    radial-gradient(60% 40% at 30% 25%, rgba(255,93,200,0.55), transparent 60%),
     radial-gradient(50% 35% at 75% 50%, rgba(160,90,255,0.55), transparent 65%),
-    radial-gradient(45% 30% at 50% 80%, rgba(60,140,255,0.5), transparent 65%);
+    radial-gradient(45% 30% at 50% 80%, rgba(93,139,255,0.55), transparent 65%);
   filter: blur(50px);
   animation: auroraFloatKf 14s ease-in-out infinite alternate;
 }
 .aurora-bg.secondary {
   background:
-    radial-gradient(50% 40% at 20% 70%, rgba(255,120,200,0.35), transparent 60%),
-    radial-gradient(45% 30% at 80% 30%, rgba(80,255,200,0.4), transparent 65%);
+    radial-gradient(50% 40% at 20% 70%, rgba(255,93,200,0.40), transparent 60%),
+    radial-gradient(45% 30% at 80% 30%, rgba(93,139,255,0.45), transparent 65%);
   filter: blur(60px);
   animation: auroraFloatKf 18s ease-in-out infinite alternate-reverse;
-  opacity: 0.7;
+  opacity: 0.75;
 }
 
 .scan-overlay {
@@ -61,11 +61,16 @@
 }
 
 @keyframes pulseGlow {
-  0%, 100% { box-shadow: 0 0 60px rgba(120,170,255,0.55); }
-  50%      { box-shadow: 0 0 90px rgba(160,90,255,0.7); }
+  0%, 100% { box-shadow: 0 0 60px rgba(160,90,255,0.55); }
+  50%      { box-shadow: 0 0 90px rgba(255,93,200,0.70); }
 }
 
 .orb-glow { animation: pulseGlow 6s ease-in-out infinite; }
+
+/* Note: the hero visual is now rendered by Remotion (HeroIconComposition).
+   The old CSS-based pulse / clouds / equalizer / shimmer / sparkle animations
+   were removed in favor of frame-perfect motion graphics driven by
+   @remotion/player. */
 
 @keyframes twinkle {
   0%, 100% { opacity: 0.15; }

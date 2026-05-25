@@ -23,7 +23,11 @@ function barHeight(i: number, frame: number): number {
   return Math.max(0.06, Math.min(1, energy));
 }
 
-export const Visualizer: React.FC<{ width: number; height: number }> = ({ width, height }) => {
+export const Visualizer: React.FC<{ width: number; height: number; intensity?: number }> = ({
+  width,
+  height,
+  intensity = 1,
+}) => {
   const frame = useCurrentFrame();
   const gap = 3;
   const barWidth = (width - gap * (BAR_COUNT - 1)) / BAR_COUNT;
@@ -56,7 +60,7 @@ export const Visualizer: React.FC<{ width: number; height: number }> = ({ width,
       </defs>
 
       {Array.from({ length: BAR_COUNT }).map((_, i) => {
-        const h = barHeight(i, frame) * height * 0.85;
+        const h = barHeight(i, frame) * height * 0.85 * intensity;
         const x = i * (barWidth + gap);
         const y = height / 2 - h / 2;
         return (

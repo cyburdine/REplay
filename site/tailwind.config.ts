@@ -24,9 +24,13 @@ export default {
       colors: {
         ink: "#02030a",
         aurora: {
-          mint: "#80ffd0",
+          // Brand palette mirrors the logo: magenta glow → violet → electric blue.
+          // `mint` is kept as a key (legacy) but now points at brand magenta so
+          // existing references render on-brand without a sweeping rename.
+          mint: "#ff5dc8",
+          magenta: "#ff5dc8",
           violet: "#a05aff",
-          blue: "#5060ff",
+          blue: "#5d8bff",
           pink: "#ff7ad0",
         },
       },

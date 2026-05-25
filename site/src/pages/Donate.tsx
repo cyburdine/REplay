@@ -157,7 +157,7 @@ const TierCard: React.FC<{
           className="absolute inset-0 opacity-30 pointer-events-none"
           style={{
             background:
-              "radial-gradient(80% 60% at 50% 0%, rgba(128,255,208,0.3), transparent 70%)",
+              "radial-gradient(80% 60% at 50% 0%, rgba(255,93,200,0.3), transparent 70%)",
           }}
         />
         <span className="absolute top-4 right-4 text-[10px] uppercase tracking-[0.18em] text-aurora-mint/90 px-2 py-1 rounded-full border border-aurora-mint/40 bg-aurora-mint/10">
@@ -186,7 +186,7 @@ const TierCard: React.FC<{
 
 const FundCard: React.FC<{ title: string; detail: string }> = ({ title, detail }) => (
   <div className="flex gap-4 p-5 rounded-xl glass">
-    <div className="flex-shrink-0 w-1.5 h-1.5 mt-2 rounded-full bg-aurora-mint shadow-[0_0_10px_rgba(128,255,208,0.7)]" />
+    <div className="flex-shrink-0 w-1.5 h-1.5 mt-2 rounded-full bg-aurora-mint shadow-[0_0_10px_rgba(255,93,200,0.7)]" />
     <div>
       <p className="text-white/90 font-medium text-[14px]">{title}</p>
       <p className="text-white/55 text-[13px] mt-1 leading-relaxed">{detail}</p>

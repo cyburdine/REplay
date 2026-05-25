@@ -88,8 +88,8 @@ export const Features: React.FC = () => {
               <div className="w-10 h-10 rounded-xl flex items-center justify-center mb-5 text-aurora-mint"
                    style={{
                      background:
-                       "linear-gradient(180deg, rgba(128,255,208,0.15), rgba(128,255,208,0.03))",
-                     border: "1px solid rgba(128,255,208,0.2)",
+                       "linear-gradient(180deg, rgba(255,93,200,0.15), rgba(255,93,200,0.03))",
+                     border: "1px solid rgba(255,93,200,0.2)",
                    }}
               >
                 <span className="w-5 h-5 block">{f.icon}</span>
@@ -99,7 +99,7 @@ export const Features: React.FC = () => {
               <div className="pointer-events-none absolute -bottom-12 -right-12 w-40 h-40 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
                    style={{
                      background:
-                       "radial-gradient(circle, rgba(128,255,208,0.18), transparent 60%)",
+                       "radial-gradient(circle, rgba(255,93,200,0.18), transparent 60%)",
                      filter: "blur(20px)",
                    }}
               />
