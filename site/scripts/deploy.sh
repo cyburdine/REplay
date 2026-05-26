@@ -31,5 +31,7 @@ ssh "$HOST" "cd '$REMOTE_BASE/releases' && ls -1t | tail -n +$((KEEP_RELEASES + 
 
 echo "✓ Deployed $RELEASE_TS"
 echo "  Live at: https://replay.cyburdine.com/  (after DNS propagation)"
-echo "  Direct origin check:"
-echo "    curl -kI --resolve replay.cyburdine.com:443:***REDACTED*** https://replay.cyburdine.com/"
+if [ -n "${ORIGIN_IP:-}" ]; then
+    echo "  Direct origin check:"
+    echo "    curl -kI --resolve replay.cyburdine.com:443:$ORIGIN_IP https://replay.cyburdine.com/"
+fi
